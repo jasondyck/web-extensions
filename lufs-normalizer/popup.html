@@ -1,0 +1,17 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <label class="row switch"><span>Normalize audio</span><input type="checkbox" id="enabled"></label>
+  <label class="row"><span>Target</span><output id="targetOut"></output></label>
+  <input type="range" id="target" min="-30" max="-6" step="1">
+  <label class="row"><span>Max boost</span><output id="maxBoostOut"></output></label>
+  <input type="range" id="maxBoost" min="0" max="24" step="1">
+  <div id="status">No audio playing in this tab</div>
+  <script src="defaults.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
