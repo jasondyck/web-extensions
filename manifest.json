@@ -4,7 +4,11 @@
   "version": "1.1.0",
   "description": "Normalizes audio and video on any site to a target loudness (LUFS).",
   "browser_specific_settings": {
-    "gecko": { "id": "lufs-normalizer@jasondyck", "strict_min_version": "128.0" }
+    "gecko": {
+      "id": "lufs-normalizer@jasondyck",
+      "strict_min_version": "128.0",
+      "data_collection_permissions": { "required": ["none"] }
+    }
   },
   "permissions": ["storage"],
   "icons": { "48": "icons/icon.svg", "96": "icons/icon.svg" },
