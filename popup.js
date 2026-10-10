@@ -1,28 +1,36 @@
 "use strict";
-const DEFAULTS = { enabled: true, target: -16, maxBoost: 12 };
 const $ = (id) => document.getElementById(id);
 const fmtDb = (v) => `${v > 0 ? "+" : ""}${v.toFixed(1)} dB`;
+const label = (key, v) => (key === "target" ? `${v} LUFS` : `${v} dB`);
+let enabled = DEFAULTS.enabled;
 
 function show(s) {
+  enabled = s.enabled;
   $("enabled").checked = s.enabled;
-  $("target").value = s.target;
-  $("targetOut").value = `${s.target} LUFS`;
-  $("maxBoost").value = s.maxBoost;
-  $("maxBoostOut").value = `${s.maxBoost} dB`;
+  for (const key of ["target", "maxBoost"]) {
+    $(key).value = s[key];
+    $(`${key}Out`).value = label(key, s[key]);
+  }
 }
 
-browser.storage.local.get(DEFAULTS).then(show);
+browser.storage.local.get(DEFAULTS).then(show).then(poll);
 
-$("enabled").addEventListener("change", (e) => browser.storage.local.set({ enabled: e.target.checked }));
+$("enabled").addEventListener("change", (e) => {
+  enabled = e.target.checked;
+  browser.storage.local.set({ enabled });
+  poll();
+});
 for (const key of ["target", "maxBoost"]) {
-  $(key).addEventListener("input", (e) => {
-    const v = Number(e.target.value);
-    $(`${key}Out`).value = key === "target" ? `${v} LUFS` : `${v} dB`;
-    browser.storage.local.set({ [key]: v });
-  });
+  // Label follows the drag; storage (and every tab) only hears the final value.
+  $(key).addEventListener("input", (e) => ($(`${key}Out`).value = label(key, e.target.value)));
+  $(key).addEventListener("change", (e) => browser.storage.local.set({ [key]: Number(e.target.value) }));
 }
 
 async function poll() {
+  if (!enabled) {
+    $("status").textContent = "Off";
+    return;
+  }
   try {
     const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
     const r = await browser.tabs.sendMessage(tab.id, { type: "status" });
@@ -34,5 +42,4 @@ async function poll() {
     $("status").textContent = "No audio playing in this tab";
   }
 }
-poll();
 setInterval(poll, 500);

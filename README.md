@@ -6,31 +6,55 @@ on/off, and shows the measured level and gain applied).
 
 ## How it works
 
-Each playing media element is routed through Web Audio:
+Each audible media element is routed through Web Audio:
 
 ```
-source ─┬─ normalize gain ─ limiter (−1 dBFS) ─ speakers
-        └─ K-weighting ─ analysers   (meter, before any gain)
+source ─┬─ normalize gain ─ limiter (−1 dBFS, shared) ─ speakers
+        └─ stereo mix ─ K-weighting ─ analysers   (meter, before any gain)
 ```
 
 - Loudness is measured per ITU-R BS.1770: K-weighting, 100 ms blocks, −70 LUFS
-  absolute gate, −10 LU relative gate, over a sliding 10 s window. Tested
-  against ffmpeg's `ebur128`: within 0.2 LU.
-- Boosts ease in at 3 dB/s. Cuts react at 15 dB/s using the louder of the
-  10 s and 3 s readings, so sudden loud parts get pulled down within about 1 s.
-- Silence holds the current gain. A new track or a seek starts a fresh measurement.
+  absolute gate, −10 LU relative gate. It is *integrated over the whole
+  program* (histogram-gated, like libebur128), not a sliding window, so it
+  converges to one static gain per video. Quiet passages fall under the
+  relative gate and are ignored rather than boosted, so dynamics are kept and
+  nothing pumps.
+- Boost is earned: none for the first second, growing to the max boost over
+  30 s of audio, and it only moves at 1 dB/s. Cuts move at 15 dB/s.
+- Loud surprises: if the 3 s short-term loudness would land more than 8 LU
+  above the target, the gain is capped so it doesn't. The cap only ever
+  tightens within a program, so a loud section is never followed by a swell.
+- A new source (`loadstart`/`emptied`) starts a fresh measurement; any boost
+  is dropped, any cut is kept. Seeking within a program keeps the measurement.
+- Silence holds the current gain.
 - The page's own volume slider keeps working: Firefox applies it before Web
   Audio, and the meter divides it back out.
-- Idle cost is one capturing `play` listener. The 100 ms timer only runs
-  while something is playing.
+
+## Cost
+
+- Idle: two capturing listeners (`play`, `volumechange`). No storage read,
+  message listener or AudioContext exists until something audible plays.
+- Muted autoplay (Reddit/X/TikTok feeds) is not captured until it is unmuted.
+- The 100 ms timer only runs while something is playing, and the AudioContext
+  is suspended whenever everything is paused, so the audio device is released.
+- One limiter per page; per-element nodes are torn down when the element
+  leaves the DOM and rebuilt if it comes back.
+- Per tick, per element: two analyser reads and a pass over a 750-bin
+  histogram. No allocation.
 
 ## Won't normalize
 
 - Cross-origin media served without CORS (Web Audio would output silence), so
   it's left alone. Most big sites (YouTube, Twitch, Reddit, X) use `blob:`
-  sources and work.
+  sources and work. A same-origin URL that redirects to a non-CORS CDN, or an
+  element reused for a cross-origin source after it was captured, can't be
+  detected up front and will go silent; capture is permanent, so toggling
+  off won't restore it.
 - DRM-protected media (Netflix, Spotify, Disney+, …).
-- Players hidden inside closed shadow DOM, since their `play` events don't reach the document.
+- Players inside shadow DOM (open or closed) and detached `new Audio()`
+  objects: their `play` events never reach the document.
+- An element that is removed from the page and then played again without
+  being re-inserted.
 
 ## Install
 
@@ -38,3 +62,5 @@ Temporary: `about:debugging#/runtime/this-firefox` → *Load Temporary Add-on…
 `manifest.json`. Permanent: upload `dist/*.zip` at
 https://addons.mozilla.org/developers/ → *Submit a New Add-on* → *On your own*,
 then install the signed `.xpi`.
+
+Build the zip: `zip -r dist/lufs-normalizer-$(jq -r .version manifest.json).zip manifest.json defaults.js content.js popup.html popup.css popup.js icons`
