@@ -1,0 +1,8 @@
+:root { color-scheme: light dark; --muted: #666; --accent: #2b6cb0; }
+@media (prefers-color-scheme: dark) { :root { --muted: #aaa; --accent: #63b3ed; } }
+body { width: 240px; margin: 0; padding: 12px 14px; font: 13px system-ui, sans-serif; }
+.row { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
+.switch { margin-top: 0; font-weight: 600; }
+output { font-variant-numeric: tabular-nums; color: var(--muted); }
+input[type=range] { width: 100%; margin: 4px 0 0; accent-color: var(--accent); }
+#status { margin-top: 12px; padding-top: 10px; border-top: 1px solid color-mix(in srgb, currentColor 15%, transparent); color: var(--muted); font-variant-numeric: tabular-nums; }
