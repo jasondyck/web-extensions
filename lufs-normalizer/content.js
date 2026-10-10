@@ -310,7 +310,8 @@ function onMedia(e) {
 document.addEventListener("play", onMedia, true);
 document.addEventListener("volumechange", onMedia, true);
 
-function onMessage(msg) {
+// sendResponse (not a returned Promise) so it works in Chromium as well as Firefox.
+function onMessage(msg, _sender, sendResponse) {
   if (msg?.type !== "status" || !active.size) return; // let a frame with media answer
   let c = null;
   for (const x of active) {
@@ -320,5 +321,5 @@ function onMessage(msg) {
       break;
     }
   }
-  return Promise.resolve({ loudness: c.loudness, gainDb: c.gainDb, playing: !c.el.paused });
+  sendResponse({ loudness: c.loudness, gainDb: c.gainDb, playing: !c.el.paused });
 }

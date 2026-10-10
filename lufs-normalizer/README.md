@@ -1,6 +1,6 @@
 # Loudness Normalizer
 
-Firefox extension that normalizes `<video>`/`<audio>` on any site to a target
+Browser extension (Firefox, Chrome, Edge) that normalizes `<video>`/`<audio>` on any site to a target
 loudness in LUFS (default −16; the popup sets the target, max boost and
 on/off, and shows the measured level and gain applied).
 
@@ -56,11 +56,22 @@ source ─┬─ normalize gain ─ limiter (−1 dBFS, shared) ─ speakers
 - An element that is removed from the page and then played again without
   being re-inserted.
 
+## Build
+
+`./build.sh` writes `dist/firefox/` and `dist/chrome/` (unpacked) plus a
+store-ready zip of each. The two manifests must carry the same version;
+`manifest.json` is Firefox's, `manifest.chrome.json` is Chrome's and Edge's
+(PNG icons, no `browser_specific_settings`). Everything else is shared.
+
 ## Install
 
-Temporary: `about:debugging#/runtime/this-firefox` → *Load Temporary Add-on…* →
-`manifest.json`. Permanent: upload `dist/*.zip` at
-https://addons.mozilla.org/developers/ → *Submit a New Add-on* → *On your own*,
-then install the signed `.xpi`.
-
-Build the zip: `zip -r dist/lufs-normalizer-$(jq -r .version manifest.json).zip manifest.json defaults.js content.js popup.html popup.css popup.js icons`
+- **Firefox, development:** `about:debugging#/runtime/this-firefox` →
+  *Load Temporary Add-on…* → `manifest.json` (or `dist/firefox/manifest.json`).
+- **Chrome / Edge, development:** `chrome://extensions` (or `edge://extensions`)
+  → enable *Developer mode* → *Load unpacked* → `dist/chrome/`.
+- **Firefox store:** upload `dist/lufs-normalizer-firefox-*.zip` at
+  https://addons.mozilla.org/developers/.
+- **Chrome Web Store:** upload `dist/lufs-normalizer-chrome-*.zip` at
+  https://chrome.google.com/webstore/devconsole (one-time $5 developer fee).
+- **Edge Add-ons:** upload the same Chrome zip at
+  https://partner.microsoft.com/dashboard/microsoftedge (free).
