@@ -1,0 +1,71 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../popup.css">
+<style>
+  html, body.page { margin: 0; width: 1280px; height: 800px; overflow: hidden; }
+  body.page { width: 1280px; padding: 0; font: 14px system-ui, sans-serif; background: #f0f0f4; color: #15141a; color-scheme: light; }
+  .tabs { height: 40px; background: #f0f0f4; display: flex; align-items: end; padding-left: 12px; gap: 4px; }
+  .tab { background: #fff; height: 32px; width: 240px; border-radius: 6px 6px 0 0; display: flex; align-items: center; padding: 0 12px; gap: 8px; box-shadow: 0 0 2px rgba(0,0,0,.15); }
+  .tab.bg { background: transparent; box-shadow: none; color: #5b5b66; }
+  .fav { width: 16px; height: 16px; border-radius: 4px; background: #e53e3e; }
+  .tab.bg .fav { background: #805ad5; }
+  .bar { height: 44px; background: #fff; display: flex; align-items: center; padding: 0 10px; gap: 10px; border-bottom: 1px solid #ddd; }
+  .url { flex: 1; height: 30px; border-radius: 6px; background: #f0f0f4; display: flex; align-items: center; padding: 0 12px; color: #5b5b66; }
+  .btn { width: 28px; height: 28px; border-radius: 4px; display: grid; place-items: center; color: #5b5b66; }
+  .btn.on { background: #e0e0e6; }
+  .btn img { width: 18px; height: 18px; }
+  .content { position: relative; height: 715px; background: #fff; padding: 28px 64px; box-sizing: border-box; }
+  .video { width: 860px; height: 484px; border-radius: 12px; background: linear-gradient(135deg, #1a365d, #2c5282 45%, #553c9a); position: relative; overflow: hidden; }
+  .video::before { content: ""; position: absolute; inset: 0; background: radial-gradient(circle at 70% 35%, rgba(251,211,141,.45), transparent 40%); }
+  .play { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); width: 84px; height: 84px; border-radius: 50%; background: rgba(0,0,0,.45); }
+  .play::after { content: ""; position: absolute; left: 33px; top: 24px; border-left: 28px solid #fff; border-top: 18px solid transparent; border-bottom: 18px solid transparent; }
+  .controls { position: absolute; left: 0; right: 0; bottom: 0; height: 44px; background: linear-gradient(transparent, rgba(0,0,0,.6)); }
+  .progress { position: absolute; left: 16px; right: 16px; bottom: 30px; height: 4px; background: rgba(255,255,255,.3); border-radius: 2px; }
+  .progress i { display: block; width: 38%; height: 100%; background: #f56565; border-radius: 2px; }
+  h1 { font-size: 22px; margin: 18px 0 6px; }
+  .meta { color: #5b5b66; }
+  .line { height: 12px; background: #ececf0; border-radius: 6px; margin-top: 14px; }
+  .side { position: absolute; left: 950px; top: 28px; width: 266px; }
+  .thumb { height: 74px; display: flex; gap: 10px; margin-bottom: 14px; }
+  .thumb b { width: 120px; border-radius: 8px; background: #cbd5e0; }
+  .thumb span { flex: 1; }
+  .popup { position: absolute; right: 8px; top: 86px; background: #fff; border-radius: 8px; box-shadow: 0 6px 24px rgba(0,0,0,.25), 0 0 0 1px rgba(0,0,0,.08); transform: scale(1.5); transform-origin: top right; }
+  .popup .inner { width: 240px; padding: 12px 14px; font: 13px system-ui, sans-serif; }
+</style>
+</head>
+<body class="page">
+  <div class="tabs">
+    <div class="tab"><span class="fav"></span>Live session: full concert</div>
+    <div class="tab bg"><span class="fav"></span>Podcast episode 112</div>
+  </div>
+  <div class="bar">
+    <div class="btn">&#8592;</div><div class="btn">&#8594;</div><div class="btn">&#8635;</div>
+    <div class="url">videos.example.com/watch?v=concert</div>
+    <div class="btn on"><img src="../icons/icon.svg"></div>
+    <div class="btn">&#9776;</div>
+  </div>
+  <div class="content">
+    <div class="video"><div class="play"></div><div class="controls"><div class="progress"><i></i></div></div></div>
+    <h1>Live session: full concert</h1>
+    <div class="meta">1.2M views · 2 days ago</div>
+    <div class="line" style="width:780px"></div>
+    <div class="line" style="width:620px"></div>
+    <div class="side">
+      <div class="thumb"><b></b><span><div class="line" style="margin-top:4px"></div><div class="line" style="width:60%"></div></span></div>
+      <div class="thumb"><b></b><span><div class="line" style="margin-top:4px"></div><div class="line" style="width:70%"></div></span></div>
+      <div class="thumb"><b></b><span><div class="line" style="margin-top:4px"></div><div class="line" style="width:50%"></div></span></div>
+      <div class="thumb"><b></b><span><div class="line" style="margin-top:4px"></div><div class="line" style="width:65%"></div></span></div>
+    </div>
+    <div class="popup" style="top:6px"><div class="inner">
+      <label class="row switch"><span>Normalize audio</span><input type="checkbox" checked></label>
+      <label class="row"><span>Target</span><output>-16 LUFS</output></label>
+      <input type="range" min="-30" max="-6" value="-16">
+      <label class="row"><span>Max boost</span><output>12 dB</output></label>
+      <input type="range" min="0" max="24" value="12">
+      <div id="status">Source −24.3 LUFS · gain +8.3 dB</div>
+    </div></div>
+  </div>
+</body>
+</html>

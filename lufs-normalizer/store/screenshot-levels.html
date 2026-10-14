@@ -1,0 +1,64 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  html, body { margin: 0; width: 1280px; height: 800px; overflow: hidden; }
+  body { background: #fff; color: #15141a; font: 16px system-ui, sans-serif; }
+  h1 { font-size: 34px; margin: 72px 0 6px; text-align: center; }
+  p.sub { margin: 0; text-align: center; color: #5b5b66; font-size: 18px; }
+  svg { display: block; margin: 40px auto 0; }
+  text { font-family: system-ui, sans-serif; }
+</style>
+</head>
+<body>
+  <h1>Every source at the same loudness</h1>
+  <p class="sub">Measured over the whole video in LUFS, then held at one steady gain. No pumping.</p>
+  <svg width="1120" height="520" viewBox="0 70 1120 520">
+    <!-- y: 0 LUFS at 40, -32 LUFS at 520 ; 15 px per LU -->
+    <g stroke="#e2e2e8">
+      <line x1="90" y1="100" x2="1090" y2="100"/><line x1="90" y1="160" x2="1090" y2="160"/>
+      <line x1="90" y1="220" x2="1090" y2="220"/><line x1="90" y1="280" x2="1090" y2="280"/>
+      <line x1="90" y1="340" x2="1090" y2="340"/><line x1="90" y1="400" x2="1090" y2="400"/>
+      <line x1="90" y1="460" x2="1090" y2="460"/>
+    </g>
+    <g fill="#5b5b66" font-size="14" text-anchor="end">
+      <text x="78" y="105">−4</text><text x="78" y="165">−8</text><text x="78" y="225">−12</text>
+      <text x="78" y="285">−16</text><text x="78" y="345">−20</text><text x="78" y="405">−24</text>
+      <text x="78" y="465">−28</text>
+      <text x="30" y="290" transform="rotate(-90 30 290)" text-anchor="middle">LUFS</text>
+    </g>
+    <!-- bars grow down from 40 (0 LUFS) is odd; draw from baseline 520 up to level -->
+    <!-- level y = 40 + 15*|LUFS| -->
+    <g>
+      <!-- Music video: -8 -> y=160 -->
+      <rect x="130" y="160" width="70" height="360" rx="4" fill="#cbd5e0"/>
+      <rect x="210" y="280" width="70" height="240" rx="4" fill="#2b6cb0"/>
+      <!-- Ad: -10 -> y=190 -->
+      <rect x="370" y="190" width="70" height="330" rx="4" fill="#cbd5e0"/>
+      <rect x="450" y="280" width="70" height="240" rx="4" fill="#2b6cb0"/>
+      <!-- Podcast: -22 -> y=370 -->
+      <rect x="610" y="370" width="70" height="150" rx="4" fill="#cbd5e0"/>
+      <rect x="690" y="280" width="70" height="240" rx="4" fill="#2b6cb0"/>
+      <!-- Lecture: -27 -> y=445 -->
+      <rect x="850" y="445" width="70" height="75" rx="4" fill="#cbd5e0"/>
+      <rect x="930" y="280" width="70" height="240" rx="4" fill="#2b6cb0"/>
+    </g>
+    <line x1="90" y1="280" x2="1090" y2="280" stroke="#fbd38d" stroke-width="3" stroke-dasharray="8 6"/>
+    <text x="1090" y="270" text-anchor="end" font-size="15" fill="#b7791f" font-weight="600">Target −16 LUFS</text>
+    <g font-size="14" text-anchor="middle" fill="#15141a">
+      <text x="165" y="150">−8</text><text x="405" y="180">−10</text>
+      <text x="645" y="360">−22</text><text x="885" y="435">−27</text>
+    </g>
+    <line x1="90" y1="520" x2="1090" y2="520" stroke="#a0a0ab"/>
+    <g font-size="17" text-anchor="middle" font-weight="600">
+      <text x="245" y="550">Music video</text><text x="485" y="550">Loud ad</text>
+      <text x="725" y="550">Podcast</text><text x="965" y="550">Quiet lecture</text>
+    </g>
+    <g font-size="15">
+      <rect x="400" y="566" width="16" height="12" rx="2" fill="#cbd5e0"/><text x="424" y="577">As published</text>
+      <rect x="580" y="566" width="16" height="12" rx="2" fill="#2b6cb0"/><text x="604" y="577">With Loudness Normalizer</text>
+    </g>
+  </svg>
+</body>
+</html>
