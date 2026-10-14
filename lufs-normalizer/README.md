@@ -4,6 +4,8 @@ Firefox extension that normalizes `<video>`/`<audio>` on any site to a target
 loudness in LUFS (default −16; the popup sets the target, max boost and
 on/off, and shows the measured level and gain applied).
 
+[Install from Firefox Add-ons](https://addons.mozilla.org/firefox/addon/loudness-normalizer/)
+
 ## How it works
 
 Each audible media element is routed through Web Audio:
