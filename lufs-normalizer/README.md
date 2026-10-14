@@ -6,6 +6,10 @@ on/off, and shows the measured level and gain applied).
 
 [Install from Firefox Add-ons](https://addons.mozilla.org/firefox/addon/loudness-normalizer/)
 
+![The toolbar popup over a video page](store/screenshot-popup.png)
+
+![Loud and quiet sources all brought to the −16 LUFS target](store/screenshot-levels.png)
+
 ## How it works
 
 Each audible media element is routed through Web Audio:
