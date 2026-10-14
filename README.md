@@ -1,4 +1,4 @@
-# extensions
+# web-extensions
 
 Browser extensions.
 
