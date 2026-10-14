@@ -7,5 +7,5 @@ rm -rf dist
 mkdir -p dist/firefox/icons
 cp manifest.json defaults.js content.js popup.html popup.css popup.js dist/firefox/
 cp icons/icon.svg dist/firefox/icons/
-(cd dist/firefox && zip -qr "../lufs-normalizer-$v.zip" .)
+(cd dist/firefox && zip -qr "../loudness-normalizer-$v.zip" .)
 ls -1 dist/*.zip

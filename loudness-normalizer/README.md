@@ -64,7 +64,7 @@ source ─┬─ normalize gain ─ limiter (−1 dBFS, shared) ─ speakers
 
 ## Build and install
 
-`./build.sh` writes `dist/firefox/` (unpacked) and `dist/lufs-normalizer-<version>.zip`.
+`./build.sh` writes `dist/firefox/` (unpacked) and `dist/loudness-normalizer-<version>.zip`.
 
 - **Development:** `about:debugging#/runtime/this-firefox` → *Load Temporary
   Add-on…* → `manifest.json`.
