@@ -1,8 +1,8 @@
 # Loudness Normalizer
 
-Firefox extension that normalizes `<video>`/`<audio>` on any site to a target
-loudness in LUFS (default −16; the popup sets the target, max boost and
-on/off, and shows the measured level and gain applied).
+Browser extension (Firefox and Chrome) that normalizes `<video>`/`<audio>` on
+any site to a target loudness in LUFS (default −16; the popup sets the target,
+max boost and on/off, and shows the measured level and gain applied).
 
 [Install from Firefox Add-ons](https://addons.mozilla.org/firefox/addon/loudness-normalizer/)
 
@@ -64,9 +64,37 @@ source ─┬─ normalize gain ─ limiter (−1 dBFS, shared) ─ speakers
 
 ## Build and install
 
-`./build.sh` writes `dist/firefox/` (unpacked) and `dist/loudness-normalizer-<version>.zip`.
+`./build.sh` writes both targets plus store zips:
 
-- **Development:** `about:debugging#/runtime/this-firefox` → *Load Temporary
-  Add-on…* → `manifest.json`.
-- **Release:** bump `version` in `manifest.json`, run `./build.sh`, upload the
-  zip under *Upload New Version* at https://addons.mozilla.org/developers/.
+| Target | Unpacked | Zip |
+| --- | --- | --- |
+| Firefox | `dist/firefox/` | `dist/loudness-normalizer-<version>.zip` |
+| Chrome | `dist/chrome/` | `dist/loudness-normalizer-<version>-chrome.zip` |
+
+The Chrome build is generated from the same `manifest.json`: `build.sh` strips
+the Gecko-only `browser_specific_settings` block, adds a `minimum_chrome_version`,
+and swaps the SVG icon for the PNGs Chrome requires (16/32/48/128, rasterized
+from `icons/icon.svg`). Keep those PNGs in `icons/` if the artwork changes; they
+are committed, so building does not need an SVG rasterizer.
+
+- **Firefox development:** `about:debugging#/runtime/this-firefox` → *Load
+  Temporary Add-on…* → `manifest.json`.
+- **Chrome development:** `chrome://extensions` → enable *Developer mode* →
+  *Load unpacked* → `dist/chrome/`.
+- **Firefox release:** bump `version` in `manifest.json`, run `./build.sh`,
+  upload `dist/loudness-normalizer-<version>.zip` under *Upload New Version* at
+  https://addons.mozilla.org/developers/.
+- **Chrome release:** bump `version`, run `./build.sh`, upload
+  `dist/loudness-normalizer-<version>-chrome.zip` in the
+  [Chrome Web Store developer console](https://chrome.google.com/webstore/devconsole).
+  Listing text, permission justifications and the data-usage answers are in
+  [store/chrome-store.md](store/chrome-store.md).
+
+Chrome differs from Firefox in a few ways that need no code changes but are
+worth knowing when testing:
+
+- Chrome ignores SVG in `icons`/`action.default_icon`, hence the PNG set.
+- Chrome's autoplay policy suspends a freshly created `AudioContext`; the
+  existing gesture wait (`afterGesture`) covers this.
+- CORS-silenced Web Audio affects Chrome the same way: cross-origin sources
+  without CORS are left uncaptured (see *Won't normalize*).
