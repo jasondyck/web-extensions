@@ -83,6 +83,39 @@ starts, and it never reads page content, DOM text, or network traffic — it onl
 touches HTMLMediaElement and Web Audio nodes it creates.
 ```
 
+## Broad host permission (in-depth review prompt)
+
+New items that match `<all_urls>` trigger a warning like:
+
+> Because of the following issue, your extension may require an in-depth review:
+> Broad Host Permissions
+
+This is informational, not a rejection. Paste this where the console asks for a
+justification (and in any reviewer email):
+
+```
+The extension's only function is to normalize the loudness of media elements on
+whichever page the user is watching. There is no fixed list of supported sites:
+any page can contain <video>/<audio>, including self-hosted lectures, podcast
+pages, and small sites, so a static host list cannot cover the use case.
+
+The content script must be present when playback starts because an
+HTMLMediaElement can only be routed through Web Audio once; injecting on a
+toolbar click would either miss audio that is already playing or attempt a
+second capture, which silences the element.
+
+The script reads no page content, no DOM text, no form data, and no network
+traffic. It only adds capturing listeners for the play and volumechange events
+on HTMLMediaElement and builds its own Web Audio graph. It makes no network
+requests, collects no data, and is inert (two event listeners, no AudioContext,
+no storage access, no messaging) until audible playback begins. Users can turn
+it off per tab from the toolbar popup.
+```
+
+Do not also add `host_permissions: ["<all_urls>"]` to the manifest — the
+`content_scripts` match patterns already produce this warning; adding it just
+duplicates the permission row.
+
 ## Data usage answers
 
 - Does the extension collect or use any user data? **No.**
