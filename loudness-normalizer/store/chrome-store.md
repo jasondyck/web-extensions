@@ -91,25 +91,21 @@ New items that match `<all_urls>` trigger a warning like:
 > Broad Host Permissions
 
 This is informational, not a rejection. Paste this where the console asks for a
-justification (and in any reviewer email):
+justification (and in any reviewer email). The field has a 1,000-character limit, so this
+version is 790:
 
 ```
-The extension's only function is to normalize the loudness of media elements on
-whichever page the user is watching. There is no fixed list of supported sites:
-any page can contain <video>/<audio>, including self-hosted lectures, podcast
-pages, and small sites, so a static host list cannot cover the use case.
-
-The content script must be present when playback starts because an
-HTMLMediaElement can only be routed through Web Audio once; injecting on a
-toolbar click would either miss audio that is already playing or attempt a
-second capture, which silences the element.
-
-The script reads no page content, no DOM text, no form data, and no network
-traffic. It only adds capturing listeners for the play and volumechange events
-on HTMLMediaElement and builds its own Web Audio graph. It makes no network
-requests, collects no data, and is inert (two event listeners, no AudioContext,
-no storage access, no messaging) until audible playback begins. Users can turn
-it off per tab from the toolbar popup.
+The extension's sole function is to normalize the loudness of media on whichever
+page the user is watching. No fixed site list can work: any page can contain
+<video>/<audio>, including self-hosted lectures and small sites. The content
+script must exist when playback starts, because an HTMLMediaElement can be
+captured by Web Audio only once; injecting on a toolbar click would miss audio
+already playing or capture it twice and silence it. It reads no page content,
+DOM text, form data or network traffic: it only adds capturing play/volumechange
+listeners to HTMLMediaElement and builds its own Web Audio graph. It makes no
+network requests, collects no data, and is inert (two listeners, no
+AudioContext, storage or messaging) until audible playback starts. Users can
+disable it per tab.
 ```
 
 Do not also add `host_permissions: ["<all_urls>"]` to the manifest — the
